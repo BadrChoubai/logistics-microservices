@@ -10,7 +10,6 @@ GO := $(if $(GOVERSION),$(GOVERSION),$(shell GOTOOLCHAIN=local go env GOVERSION)
 SHELL := /usr/bin/env bash -o errexit -o pipefail -o nounset
 GOFLAGS ?=
 VERSION ?= $(shell git describe --tags --always --dirty)
-REGISTRY ?= localhost:5000
 
 
 all: # @HELP build container image 
@@ -60,16 +59,6 @@ image-clean: # @HELP remove all built images
 image-clean:
 	$(foreach bin, $(BINS), docker rmi logistics-$(bin):$(VERSION) || true;)
 
-image-push: # @HELP pushes image to $(REGISTRY); used for kubernetes deployment, not necessary for development.
-image-push:
-	$(foreach bin, $(BINS), \
-		docker tag logistics-$(bin):$(VERSION) $(REGISTRY)/logistics-$(bin):$(VERSION); \
-		docker push $(REGISTRY)/logistics-$(bin):$(VERSION);)
-	curl -k '$(REGISTRY)/v2/_catalog'
-
-registry:
-	curl -k '$(REGISTRY)/v2/_catalog'
-
 
 lint: # @HELP lint with golangci-lint
 lint:
@@ -92,7 +81,6 @@ help:
 	echo "  ARCH = $(ARCH)"
 	echo "  GOFLAGS = $(GOFLAGS)"
 	echo "  GO = $(GO)"
-	echo "  REGISTRY = $(REGISTRY)"
 	echo
 	echo "TARGETS:"
 	grep -E '^.*: *# *@HELP' $(MAKEFILE_LIST)     \
