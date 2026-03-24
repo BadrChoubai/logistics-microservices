@@ -90,6 +90,6 @@ help:
 	    '
 
 .SILENT: help
-.PHONY: all build ci clean deps docs image image-clean image-push lint push test version help \
+.PHONY: all build ci clean deps docs image image-clean lint test version help \
 	$(addprefix build-,$(BINS)) \
 	$(addprefix image-,$(BINS))
