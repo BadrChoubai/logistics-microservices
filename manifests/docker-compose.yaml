@@ -1,0 +1,5 @@
+services:
+  gateway:
+    image: localhost:5000/logistics-gateway:1.0.0
+    ports:
+      - "8080:8080"
