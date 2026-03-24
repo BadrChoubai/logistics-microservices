@@ -134,27 +134,10 @@ Common commands:
 ```bash
 make build        # Build binaries locally
 make image        # Build Docker images
-make image-push   # Push images to registry
 make clean        # Clean build artifacts and images
 make test         # Run tests
 make lint         # Run linters
 make version      # Print current version
-```
-
----
-
-## 🐳 Docker Registry
-
-By default, images are pushed to:
-
-```
-localhost:5000
-```
-
-Push images with:
-
-```bash
-make image-push
 ```
 
 ---
