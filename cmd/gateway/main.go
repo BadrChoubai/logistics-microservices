@@ -28,10 +28,11 @@ func run() error {
 	mux := http.NewServeMux()
 
 	mux.Handle("/api/", httpSwagger.WrapHandler)
-	mux.HandleFunc("/health/", handler.Health)
+	mux.HandleFunc("/health", handler.Health)
+
+	fmt.Println("server running on localhost:8080")
 
 	err := http.ListenAndServe(":8080", mux)
-	fmt.Println("server running on localhost:8080")
 	if err != nil {
 		return err
 	}
