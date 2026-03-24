@@ -111,6 +111,14 @@ b3d2787
    docker compose -f manifests/docker-compose.yaml up --build
    ```
 
+*Other Commands*:
+
+```bash
+make build        # compile all binaries to ./bin
+make ci           # run lint + tests
+make docs         # regenerate Swagger spec after changing annotations
+```
+
 ---
 
 ## 📖 API Documentation
