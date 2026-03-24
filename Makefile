@@ -9,8 +9,7 @@ GO := $(if $(GOVERSION),$(GOVERSION),$(shell GOTOOLCHAIN=local go env GOVERSION)
 
 SHELL := /usr/bin/env bash -o errexit -o pipefail -o nounset
 GOFLAGS ?=
-# VERSION ?= $(shell git describe --tags --always --dirty)
-VERSION ?= 1.0.0 
+VERSION ?= $(shell git describe --tags --always --dirty)
 REGISTRY ?= localhost:5000
 
 

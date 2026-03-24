@@ -17,6 +17,7 @@
 !README.md
 !LICENSE
 !Makefile
+!.env.example
 
 # --- API (Swagger is part of source of truth) ---
 !api/
