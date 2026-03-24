@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	_ "github.com/BadrChoubai/logistics-microservices/api/swagger"
+	"github.com/BadrChoubai/logistics-microservices/internal/gateway/handler"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
@@ -27,6 +28,7 @@ func run() error {
 	mux := http.NewServeMux()
 
 	mux.Handle("/api/", httpSwagger.WrapHandler)
+	mux.HandleFunc("/health/", handler.Health)
 
 	err := http.ListenAndServe(":8080", mux)
 	fmt.Println("server running on localhost:8080")
