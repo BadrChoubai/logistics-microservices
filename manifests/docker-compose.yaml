@@ -1,5 +1,11 @@
+name: logistics
+
 services:
   gateway:
-    image: localhost:5000/logistics-gateway:1.0.0
+    build:
+      context: ..
+      dockerfile: manifests/Dockerfile
+      args:
+        SERVICE: gateway
     ports:
       - "8080:8080"

@@ -60,8 +60,7 @@ image-clean: # @HELP remove all built images
 image-clean:
 	$(foreach bin, $(BINS), docker rmi logistics-$(bin):$(VERSION) || true;)
 
-push: image-push
-image-push: # @HELP pushes image to $(REGISTRY)
+image-push: # @HELP pushes image to $(REGISTRY); used for kubernetes deployment, not necessary for development.
 image-push:
 	$(foreach bin, $(BINS), \
 		docker tag logistics-$(bin):$(VERSION) $(REGISTRY)/logistics-$(bin):$(VERSION); \
