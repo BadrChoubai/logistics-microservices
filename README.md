@@ -45,7 +45,6 @@ This repository contains a Go-based microservices architecture with an API Gatew
 ### 1. Build & Run with Docker Compose
 
 ```bash
-make image
 docker compose -f manifests/docker-compose.yaml up --build
 ```
 
