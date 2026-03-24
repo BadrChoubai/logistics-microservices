@@ -35,7 +35,7 @@ clean: image-clean
 docs: # @HELP generate documentation
 docs:
 	swag fmt
-	swag init --generalInfo main.go --dir cmd/gateway -o api/swagger
+	swag init --generalInfo cmd/gateway/main.go --dir . --parseInternal -o api/swagger
 
 deps: # @HELP go mod tidy, download
 deps:
