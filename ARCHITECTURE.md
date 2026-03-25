@@ -118,6 +118,17 @@ The gateway is implemented in three stages:
 Each stage is developed independently so the gateway is functional and
 deployable before all features are complete.
 
+## System Diagram
+
+```mermaid
+flowchart TD
+    A[Client] --> B{API Gateway}
+    B --> C[Shipment] --> D[(Shipment DB)]
+    B --> E[Inventory] --> F[(Inventory DB)]
+    B --> G[Telemetry] --> H[(Telemetry DB)]
+    C <-->|gRPC| E
+```
+
 ## API Design Principles
 
 1. **REST externally**, gRPC internally — all client-facing endpoints are REST;
