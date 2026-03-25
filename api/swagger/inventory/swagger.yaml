@@ -7,13 +7,13 @@ definitions:
       version:
         type: string
     type: object
-  handler.Shipment:
+  handler.Item:
     type: object
 host: localhost:8081
 info:
   contact: {}
-  description: Shipment Service for the Logistics Services API platform
-  title: Shipment Service
+  description: Inventory Service for the Logistics Services API platform
+  title: Inventory Service
   version: 1.0.0
 paths:
   /health:
@@ -41,9 +41,9 @@ paths:
       summary: Health check
       tags:
       - system
-  /shipments:
+  /items:
     get:
-      description: Returns a list of shipments
+      description: Returns a list of all items
       produces:
       - application/json
       responses:
@@ -51,72 +51,88 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/handler.Shipment'
+              $ref: '#/definitions/handler.Item'
             type: array
-      summary: Get Shipments
+      summary: Get Items
       tags:
-      - shipment
+      - inventory
     post:
-      description: Create a new shipment
+      description: Create a new item
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/handler.Shipment'
-      summary: Create Shipment
+            $ref: '#/definitions/handler.Item'
+      summary: Create Item
       tags:
-      - shipment
-  /shipments/:id:
+      - inventory
+  /items/{id}:
     delete:
-      description: Delete a shipment by its ID
+      description: delete an item from inventory using its id
       produces:
       - application/json
       responses:
-        "202":
-          description: Accepted
-      summary: Delete Shipment by a given ID
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/handler.Item'
+      summary: delete item
       tags:
-      - shipment
+      - inventory
+    get:
+      description: Get an item from inventory using its id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Item'
+      summary: Get Item
+      tags:
+      - inventory
     put:
-      description: Update a shipment by its ID
+      description: update an item from inventory using its id
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
           schema:
-            $ref: '#/definitions/handler.Shipment'
-      summary: Update Shipment by a given ID
+            $ref: '#/definitions/handler.Item'
+      summary: update item
       tags:
-      - shipment
-  /shipments/{id}:
+      - inventory
+  /items/{id}/stock:
+    put:
+      description: update an item's stock count from inventory using its id
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/handler.Item'
+      summary: update item stock
+      tags:
+      - inventory
+  /items/low-stock:
     get:
-      description: Get a shipment by its ID
+      description: List items from inventory with low stock count
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handler.Shipment'
-      summary: Get Shipment by a given ID
+            items:
+              $ref: '#/definitions/handler.Item'
+            type: array
+      summary: list items from inventory with low stock
       tags:
-      - shipment
-  /shipments/{id}/status:
-    get:
-      description: Get the status of a shipment by its ID
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handler.Shipment'
-      summary: Get Shipment Status by a given ID
-      tags:
-      - shipment
+      - inventory
 securityDefinitions:
   BearerAuth:
     in: header

@@ -51,7 +51,7 @@ func GetShipments(w http.ResponseWriter, r *http.Request) {
 //	@Description	Create a new shipment
 //	@Tags			shipment
 //	@Produce		json
-//	@Success		200	{object}	Shipment
+//	@Success		201	{object}	Shipment
 //	@Router			/shipments [post]
 func CreateShipment(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Not implemented", http.StatusNotImplemented)

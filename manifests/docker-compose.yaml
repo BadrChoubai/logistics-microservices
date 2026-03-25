@@ -17,3 +17,11 @@ services:
         SERVICE: shipment
     ports:
       - "8081:8081"
+  inventory:
+    build:
+      context: ..
+      dockerfile: manifests/Dockerfile
+      args:
+        SERVICE: inventory
+    ports:
+      - "8082:8082"
