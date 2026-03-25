@@ -10,7 +10,7 @@ type HealthcheckResponse struct {
 	Version string `json:"version"`
 }
 
-// Health godoc
+// Gateway Health godoc
 //
 //	@Summary		Health check
 //	@Description	Returns service health check response

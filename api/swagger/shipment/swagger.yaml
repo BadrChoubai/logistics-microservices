@@ -1,0 +1,125 @@
+basePath: /
+definitions:
+  handler.HealthcheckResponse:
+    properties:
+      status:
+        type: string
+      version:
+        type: string
+    type: object
+  handler.Shipment:
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  description: Shipment Service for the Logistics Services API platform
+  title: Shipment Service
+  version: 1.0.0
+paths:
+  /health:
+    get:
+      description: Returns service health check response
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.HealthcheckResponse'
+      summary: Health check
+      tags:
+      - system
+    head:
+      description: Returns service health check response
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.HealthcheckResponse'
+      summary: Health check
+      tags:
+      - system
+  /shipments:
+    get:
+      description: Returns a list of shipments
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handler.Shipment'
+            type: array
+      summary: Get Shipments
+      tags:
+      - shipment
+    post:
+      description: Create a new shipment
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Shipment'
+      summary: Create Shipment
+      tags:
+      - shipment
+  /shipments/:id:
+    delete:
+      description: Delete a shipment by its ID
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+      summary: Delete Shipment by a given ID
+      tags:
+      - shipment
+    put:
+      description: Update a shipment by its ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Shipment'
+      summary: Update Shipment by a given ID
+      tags:
+      - shipment
+  /shipments/{id}:
+    get:
+      description: Get a shipment by its ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Shipment'
+      summary: Get Shipment by a given ID
+      tags:
+      - shipment
+  /shipments/{id}/status:
+    get:
+      description: Get the status of a shipment by its ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Shipment'
+      summary: Get Shipment Status by a given ID
+      tags:
+      - shipment
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

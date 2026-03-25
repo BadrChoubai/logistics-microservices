@@ -9,3 +9,11 @@ services:
         SERVICE: gateway
     ports:
       - "8080:8080"
+  shipment:
+    build:
+      context: ..
+      dockerfile: manifests/Dockerfile
+      args:
+        SERVICE: shipment
+    ports:
+      - "8081:8081"
