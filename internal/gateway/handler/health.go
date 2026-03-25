@@ -16,7 +16,7 @@ type HealthcheckResponse struct {
 //	@Description	Returns service health check response
 //	@Tags			system
 //	@Produce		json
-//	@Success		200	{Object}	HealthcheckResponse
+//	@Success		200	{object}	HealthcheckResponse
 //	@Router			/health [get]
 //	@Router			/health [head]
 func Health(w http.ResponseWriter, r *http.Request) {

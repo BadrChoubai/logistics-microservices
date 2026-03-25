@@ -6,15 +6,28 @@ This repository contains a Go-based microservices architecture with an API Gatew
 
 ## 🧱 Project Structure
 
-```
+```text
 .
-├── api/                # Generated Swagger API documentation (single source of truth)
-├── cmd/                # Service entrypoints (gateway, inventory, shipment, telemetry)
-├── internal/           # Shared internal packages
-├── manifests/          # Docker & deployment configuration
-├── go.mod / go.sum     # Go module dependencies
-├── Makefile            # Build, test, and Docker automation
-└── docker-compose.yaml # Local multi-service orchestration
+├── .env
+├── LICENSE
+├── Makefile
+├── README.md
+├── api
+│   └── swagger
+├── cmd
+│   ├── gateway
+│   ├── inventory
+│   ├── shipment
+│   └── telemetry
+├── internal
+│   └── gateway
+└── manifests
+    ├── Dockerfile
+    ├── docker-compose.yaml
+    ├── gateway
+    ├── inventory
+    ├── shipment
+    └── telemetry
 ```
 
 ---
@@ -32,7 +45,6 @@ This repository contains a Go-based microservices architecture with an API Gatew
 ### 1. Build & Run with Docker Compose
 
 ```bash
-make image
 docker compose -f manifests/docker-compose.yaml up --build
 ```
 
@@ -98,6 +110,14 @@ b3d2787
    docker compose -f manifests/docker-compose.yaml up --build
    ```
 
+*Other Commands*:
+
+```bash
+make build        # compile all binaries to ./bin
+make ci           # run lint + tests
+make docs         # regenerate Swagger spec after changing annotations
+```
+
 ---
 
 ## 📖 API Documentation
@@ -134,27 +154,10 @@ Common commands:
 ```bash
 make build        # Build binaries locally
 make image        # Build Docker images
-make image-push   # Push images to registry
 make clean        # Clean build artifacts and images
 make test         # Run tests
 make lint         # Run linters
 make version      # Print current version
-```
-
----
-
-## 🐳 Docker Registry
-
-By default, images are pushed to:
-
-```
-localhost:5000
-```
-
-Push images with:
-
-```bash
-make image-push
 ```
 
 ---
