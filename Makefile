@@ -1,6 +1,6 @@
 include .env
 
-BINS ?= gateway
+BINS ?= gateway shipment
 
 # Used internally.  Users should pass GOOS and/or GOARCH.
 OS := $(if $(GOOS),$(GOOS),$(shell GOTOOLCHAIN=local go env GOOS))
@@ -16,26 +16,27 @@ all: # @HELP build container image
 all: build
 
 build: # @HELP build app for local development
-build: deps ci
-	mkdir -p bin
-	$(foreach bin, $(BINS), \
-		GOOS=$(OS) GOARCH=$(ARCH) go build -o bin/$(bin) $(GOFLAGS) ./cmd/$(bin)/main.go;)
+build: deps ci $(addprefix build-,$(BINS))
+
+$(addprefix build-,$(BINS)): build-%:
+	GOOS=$(OS) GOARCH=$(ARCH) go build -o bin/$* $(GOFLAGS) ./cmd/$*/main.go
 
 ci: # @HELP ci steps(lint, test)
 ci: lint test
-
-$(addprefix build-,$(BINS)): build-%:
-	mkdir -p bin
-	GOOS=$(OS) GOARCH=$(ARCH) go build -o bin/$* $(GOFLAGS) ./cmd/$*/main.go
 
 clean: # @HELP clean build artifacts
 clean: image-clean
 	rm -rf ./bin
 
-docs: # @HELP generate documentation
-docs:
+docs: # @HELP generate Swagger API documentation
+docs: $(addprefix docs-,$(BINS))
 	swag fmt
-	swag init --generalInfo cmd/gateway/main.go --dir . --parseInternal -o api/swagger
+
+$(addprefix docs-,$(BINS)): docs-%:
+	swag init --generalInfo main.go \
+		--dir ./cmd/$*,./internal/$*/handler \
+		--parseInternal \
+		-o api/swagger/$*
 
 deps: # @HELP go mod tidy, download
 deps:
@@ -43,11 +44,7 @@ deps:
 	go mod download
 
 image: # @HELP build all docker images
-image:
-	$(foreach bin, $(BINS), \
-		docker image inspect logistics-$(bin):$(VERSION) >/dev/null 2>&1 	\
-		&& echo "Image logistics-$(bin):$(VERSION) already exists"			\
-		|| docker build --build-arg SERVICE=$(bin) -t logistics-$(bin):$(VERSION) -f ./manifests/Dockerfile .;)
+image: $(addprefix image-,$(BINS))
 
 $(addprefix image-,$(BINS)): image-%:
 	docker image inspect logistics-$*:$(VERSION) >/dev/null 2>&1 	\
@@ -92,4 +89,5 @@ help:
 .SILENT: help
 .PHONY: all build ci clean deps docs image image-clean lint test version help \
 	$(addprefix build-,$(BINS)) \
-	$(addprefix image-,$(BINS))
+	$(addprefix image-,$(BINS)) \
+	$(addprefix docs-,$(BINS))
