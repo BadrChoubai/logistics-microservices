@@ -36,9 +36,9 @@ This repository contains a Go-based microservices architecture with an API Gatew
 
 ### Prerequisites
 
-* Go 1.25+
-* Docker & Docker Compose
-* Make (recommended)
+- Go 1.25+
+- Docker & Docker Compose
+- Make (recommended)
 
 ---
 
@@ -76,13 +76,13 @@ docker compose -f manifests/docker-compose.yaml logs -f gateway
 
 This project uses Git-based versioning for Docker images.
 
-* Each image is tagged using the current Git commit:
+- Each image is tagged using the current Git commit:
 
   ```
   logistics-gateway:<git-sha>
   ```
 
-* You can inspect the version with:
+- You can inspect the version with:
 
 ```bash
 make version
@@ -104,13 +104,14 @@ b3d2787
    ```bash
    make image
    ```
+
 3. Run services:
 
    ```bash
    docker compose -f manifests/docker-compose.yaml up --build
    ```
 
-*Other Commands*:
+_Other Commands_:
 
 ```bash
 make build        # compile all binaries to ./bin
@@ -140,8 +141,8 @@ http://localhost:8080/api
 
 ## 🔐 Environment Variables
 
-* Environment variables are managed via `.env`
-* A sample configuration should be stored in `.env.example`
+- Environment variables are managed via `.env`
+- A sample configuration should be stored in `.env.example`
 
 > ⚠️ Do not commit `.env` files (they are ignored by `.gitignore`)
 
@@ -164,16 +165,16 @@ make version      # Print current version
 
 ## 🧠 Notes
 
-* The API Gateway acts as the **entry point and source of truth** for API documentation.
-* Services are containerized and orchestrated via Docker Compose.
-* Git commit hashes are used for deterministic versioning.
-* The project is structured as a **monorepo** containing multiple microservices.
+- The API Gateway acts as the **entry point and source of truth** for API documentation.
+- Services are containerized and orchestrated via Docker Compose.
+- Git commit hashes are used for deterministic versioning.
+- The project is structured as a **monorepo** containing multiple microservices.
 
 ---
 
 ## 📌 Future Improvements
 
-[//]: # (TODO: Create Project Board)
+[//]: # "TODO: Create Project Board"
 
 ---
 
