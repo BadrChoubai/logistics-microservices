@@ -16,6 +16,7 @@
 # --- Documentation & metadata ---
 !README.md
 !LICENSE
+!ARCHITECTURE.md
 !Makefile
 
 # --- API (Swagger is part of source of truth) ---
