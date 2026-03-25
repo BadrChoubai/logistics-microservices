@@ -13,7 +13,7 @@ VERSION ?= $(shell git describe --tags --always --dirty)
 
 
 all: # @HELP build container image 
-all: deps ci image 
+all: build
 
 build: # @HELP build app for local development
 build: deps ci
