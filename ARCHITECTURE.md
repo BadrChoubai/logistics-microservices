@@ -129,6 +129,53 @@ flowchart TD
     C <-->|gRPC| E
 ```
 
+## Data Model
+
+```mermaid
+erDiagram
+    SHIPMENT {
+        uuid        id
+        date        order_date
+        string      status
+        string      origin
+        string      destination
+        timestamp   created_at
+        timestamp   updated_at
+    }
+    SHIPMENT_ITEM {
+        uuid    id PK
+        uuid    shipment_id FK
+        uuid    inventory_id FK
+        int     quantity
+    }
+    INVENTORY {
+        uuid    id
+        string  name
+        int     quantity
+        uuid    warehouse_id FK
+    }
+    TELEMETRY {
+        uuid        id
+        timestamp   timestamp
+        uuid        shipment_id FK "the shipment this data is tied to"
+        int         temperature_celsius
+        decimal     longitude
+        decimal     latitude
+        string      sensor_type
+    }
+    WAREHOUSE {
+        uuid    id
+        string  address
+        string  city
+        string  state
+        string  zip_code
+    }
+    SHIPMENT ||--o{ TELEMETRY : "has"
+    SHIPMENT ||--o{ SHIPMENT_ITEM : "contains"
+    SHIPMENT_ITEM }o--|| INVENTORY : "references"
+    INVENTORY }o--|| WAREHOUSE : "stored in"
+```
+
 ## API Design Principles
 
 1. **REST externally**, gRPC internally — all client-facing endpoints are REST;
