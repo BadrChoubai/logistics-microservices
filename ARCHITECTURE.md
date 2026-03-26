@@ -99,10 +99,10 @@ temperature, humidity, GPS coordinates, etc.
 | Method | Path                                    | Description                       |
 | ------ | --------------------------------------- | --------------------------------- |
 | GET    | `/health`                               | Health check                      |
+| GET    | `/api/v1/readings`                      | Query readings by time range      |
 | POST   | `/api/v1/readings`                      | Ingest a sensor reading           |
 | GET    | `/api/v1/readings/{shipment_id}`        | Get readings by shipment ID       |
 | GET    | `/api/v1/readings/{shipment_id}/latest` | Get latest reading for a shipment |
-| GET    | `/api/v1/readings`                      | Query readings by time range      |
 
 ## Gateway
 

@@ -1,0 +1,87 @@
+basePath: /
+definitions:
+  handler.HealthcheckResponse:
+    properties:
+      status:
+        type: string
+      version:
+        type: string
+    type: object
+  handler.TelemetryReading:
+    type: object
+host: localhost:8083
+info:
+  contact: {}
+  description: Telemetry Service for the Logistics Services API platform
+  title: Telemetry Service
+  version: 1.0.0
+paths:
+  /health:
+    get:
+      description: Returns service health check response
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.HealthcheckResponse'
+      summary: Health check
+      tags:
+      - system
+    head:
+      description: Returns service health check response
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.HealthcheckResponse'
+      summary: Health check
+      tags:
+      - system
+  /readings:
+    get:
+      description: Returns a sensor reading
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.TelemetryReading'
+      summary: Get Sensor Reading
+      tags:
+      - telemetry
+    post:
+      description: Returns a sensor reading
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handler.TelemetryReading'
+      summary: Ingest Sensor Reading
+      tags:
+      - telemetry
+  /readings/{shipment_id}:
+    get:
+      description: Returns telemetry data for a given shipment
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: list
+      summary: Get sensor reading for a Shipment
+      tags:
+      - telemetry
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

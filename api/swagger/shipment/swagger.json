@@ -1,0 +1,190 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Shipment Service for the Logistics Services API platform",
+        "title": "Shipment Service",
+        "contact": {},
+        "version": "1.0.0"
+    },
+    "host": "localhost:8081",
+    "basePath": "/",
+    "paths": {
+        "/health": {
+            "get": {
+                "description": "Returns service health check response",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "system"
+                ],
+                "summary": "Health check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.HealthcheckResponse"
+                        }
+                    }
+                }
+            },
+            "head": {
+                "description": "Returns service health check response",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "system"
+                ],
+                "summary": "Health check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.HealthcheckResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/shipments": {
+            "get": {
+                "description": "Returns a list of shipments",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shipment"
+                ],
+                "summary": "Get Shipments",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/handler.Shipment"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new shipment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shipment"
+                ],
+                "summary": "Create Shipment",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Shipment"
+                        }
+                    }
+                }
+            }
+        },
+        "/shipments/:id": {
+            "put": {
+                "description": "Update a shipment by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shipment"
+                ],
+                "summary": "Update Shipment by a given ID",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Shipment"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a shipment by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shipment"
+                ],
+                "summary": "Delete Shipment by a given ID",
+                "responses": {
+                    "202": {
+                        "description": "Accepted"
+                    }
+                }
+            }
+        },
+        "/shipments/{id}": {
+            "get": {
+                "description": "Get a shipment by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shipment"
+                ],
+                "summary": "Get Shipment by a given ID",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Shipment"
+                        }
+                    }
+                }
+            }
+        },
+        "/shipments/{id}/status": {
+            "get": {
+                "description": "Get the status of a shipment by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shipment"
+                ],
+                "summary": "Get Shipment Status by a given ID",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Shipment"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handler.HealthcheckResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.Shipment": {
+            "type": "object"
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
