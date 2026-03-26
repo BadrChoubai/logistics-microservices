@@ -25,3 +25,11 @@ services:
         SERVICE: inventory
     ports:
       - "8082:8082"
+  telemetry:
+    build:
+      context: ..
+      dockerfile: manifests/Dockerfile
+      args:
+        SERVICE: telemetry
+    ports:
+      - "8083:8083"

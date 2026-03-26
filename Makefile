@@ -1,6 +1,6 @@
 include .env
 
-BINS ?= gateway shipment inventory
+BINS ?= gateway shipment inventory telemetry
 
 # Used internally.  Users should pass GOOS and/or GOARCH.
 OS := $(if $(GOOS),$(GOOS),$(shell GOTOOLCHAIN=local go env GOOS))
