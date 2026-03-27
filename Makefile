@@ -1,5 +1,4 @@
 include .env
-include migrations/Makefile
 
 BINS ?= gateway shipment inventory telemetry
 BUILD_DIRS := bin
