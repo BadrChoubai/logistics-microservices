@@ -19,7 +19,7 @@ migrations/up/telemetry: # @HELP run migrations for only telemetry database
 	migrate -path ./telemetry -database ${TELEMETRY_DB_CONNECTION_STRING} up
 
 migrations/up: # @HELP run migrations for all databases
-migrations/up: migrations/up/shipment  migrations/up/inventory migrations/up/telemetry
+migrations/up: migrations/up/shipment migrations/up/inventory migrations/up/telemetry
 
 migrations/down/shipment: # @HELP run teardown migrations for shipment database
 	migrate -path ./shipment -database ${SHIPMENT_DB_CONNECTION_STRING} down 1
