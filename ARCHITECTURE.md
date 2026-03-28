@@ -123,8 +123,8 @@ deployable before all features are complete.
 ```mermaid
 flowchart TD
     A[Client] --> B{API Gateway}
-    B --> C[Shipment] --> D[(Shipment DB)]
-    B --> E[Inventory] --> F[(Inventory DB)]
+    B --> C[Shipment] --> D[(Logistics DB)]
+    B --> E[Inventory] --> D[(Logistics DB)]
     B --> G[Telemetry] --> H[(Telemetry DB)]
     C <-->|gRPC| E
 ```
