@@ -30,9 +30,7 @@ This repository contains a Go-based microservices architecture with an API Gatew
 │   └── telemetry
 └── migrations
     ├── Makefile
-    ├── README.md
-    ├── inventory
-    ├── shipment
+    ├── logistics
     └── telemetry
 ```
 
