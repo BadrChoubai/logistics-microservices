@@ -19,7 +19,7 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      shipment-db:
+      logistics-db:
         condition: service_healthy
 
   inventory:
@@ -31,7 +31,7 @@ services:
     ports:
       - "8082:8082"
     depends_on:
-      inventory-db:
+      logistics-db:
         condition: service_healthy
 
   telemetry:
@@ -46,30 +46,16 @@ services:
       telemetry-db:
         condition: service_healthy
 
-  shipment-db:
+  logistics-db:
     image: postgres:17-alpine
     environment:
-      POSTGRES_DB: shipment_db
+      POSTGRES_DB: logistics_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d shipment_db"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  inventory-db:
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_DB: inventory_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5433:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d inventory_db"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d logistics_db"]
       interval: 5s
       timeout: 5s
       retries: 5
