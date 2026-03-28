@@ -131,51 +131,100 @@ flowchart TD
 
 ## Data Model
 
+> Per-Service documentation for this section is located in [migrations/ARCHITECTURE.md](./migrations/ARCHITECTURE.md)
+
 ```mermaid
 erDiagram
     SHIPMENT {
-        uuid        id
-        date        order_date
-        string      status
-        string      origin
-        string      destination
+        uuid        id PK
+        timestamp   order_date
+        VARCHAR(50) status
+        VARCHAR(50) origin
+        VARCHAR(50) destination
         timestamp   created_at
         timestamp   updated_at
     }
+
+    CONTAINER {
+        uuid        id PK
+        uuid        shipment_id FK
+        VARCHAR(11) container_number
+        timestamp   created_at
+        timestamp   updated_at
+
+    }
+
     SHIPMENT_ITEM {
-        uuid    id PK
-        uuid    shipment_id FK
-        uuid    inventory_id FK
-        int     quantity
+        uuid        id PK
+        uuid        shipment_id FK
+        uuid        inventory_id FK
+        int         quantity
+        timestamp   created_at
+        timestamp   updated_at
     }
+
     INVENTORY {
-        uuid    id
-        string  name
-        int     quantity
-        uuid    warehouse_id FK
+        uuid        id PK
+        uuid        warehouse_id FK
+        VARCHAR(50) name
+        int         quantity
+        timestamp   created_at
+        timestamp   updated_at
     }
-    TELEMETRY {
-        uuid        id
-        timestamp   timestamp
-        uuid        shipment_id FK "the shipment this data is tied to"
-        int         temperature_celsius
-        decimal     longitude
-        decimal     latitude
-        string      sensor_type
-    }
+
     WAREHOUSE {
-        uuid    id
-        string  address
-        string  city
-        string  state
-        string  zip_code
+        uuid        id PK
+        VARCHAR(50) address
+        VARCHAR(50) city
+        VARCHAR(50) state
+        VARCHAR(50) zip_code
+        timestamp   created_at
+        timestamp   updated_at
     }
-    SHIPMENT ||--o{ TELEMETRY : "has"
+
+    SHIPMENT ||--o{ CONTAINER : "has"
     SHIPMENT ||--o{ SHIPMENT_ITEM : "contains"
     SHIPMENT_ITEM }o--|| INVENTORY : "references"
     INVENTORY }o--|| WAREHOUSE : "stored in"
-```
 
+    SENSOR {
+        uuid            id PK
+        uuid            container_id FK
+        ENUM            sensor_type "(Environmental, Location, Security)"     
+        timestamp       created_at
+        timestamp       updated_at
+
+    }
+
+    ENVIRONMENTAL_READING {
+        uuid            id PK
+        uuid            sensor_id FK
+        int             temperature_celsius
+        timestamp       recorded_at
+        timestamp       created_at
+    }
+
+    LOCATION_READING {
+        uuid            id PK
+        uuid            sensor_id FK
+        DECIMAL         latitude "`latitude` is `DECIMAL(9,6)` in the database schema."
+        DECIMAL         longitude "`longitude` is `DECIMAL(9,6)` in the database schema."
+        timestamp       recorded_at
+        timestamp       created_at
+    }
+
+    SECURITY_READING {
+        uuid            id PK
+        uuid            sensor_id FK
+        boolean         door_open
+        timestamp       recorded_at
+        timestamp       created_at
+    }
+
+    SENSOR ||--o{ ENVIRONMENTAL_READING : "produces"
+    SENSOR ||--o{ LOCATION_READING : "produces"
+    SENSOR ||--o{ SECURITY_READING : "produces"
+```
 ## API Design Principles
 
 1. **REST externally**, gRPC internally — all client-facing endpoints are REST;
