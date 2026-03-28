@@ -1,6 +1,7 @@
 include .env
 
 BINS ?= gateway shipment inventory telemetry
+BUILD_DIRS := bin
 
 # Used internally.  Users should pass GOOS and/or GOARCH.
 OS := $(if $(GOOS),$(GOOS),$(shell GOTOOLCHAIN=local go env GOOS))
@@ -16,7 +17,11 @@ all: # @HELP build container image
 all: build
 
 build: # @HELP build app for local development
-build: deps ci $(addprefix build-,$(BINS))
+build: deps ci $(BUILD_DIRS) $(addprefix build-,$(BINS))
+
+
+$(BUILD_DIRS):
+	mkdir -p $@
 
 $(addprefix build-,$(BINS)): build-%:
 	GOOS=$(OS) GOARCH=$(ARCH) go build -o bin/$* $(GOFLAGS) ./cmd/$*/main.go
@@ -47,9 +52,12 @@ image: # @HELP build all docker images
 image: $(addprefix image-,$(BINS))
 
 $(addprefix image-,$(BINS)): image-%:
-	docker image inspect logistics-$*:$(VERSION) >/dev/null 2>&1 	\
-	&& echo "Image logistics-$*:$(VERSION) already exists"			\
-	|| docker build --build-arg SERVICE=$* -t logistics-$*:$(VERSION) -f ./manifests/Dockerfile .
+	@if docker image inspect logistics-$*:$(VERSION) >/dev/null 2>&1; then \
+		echo "Image logistics-$*:$(VERSION) already exists"; \
+	else \
+		docker build --build-arg SERVICE=$* -t logistics-$*:$(VERSION) -f ./manifests/Dockerfile .; \
+	fi
+
 
 
 image-clean: # @HELP remove all built images

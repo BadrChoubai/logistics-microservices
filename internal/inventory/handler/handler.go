@@ -12,7 +12,7 @@ type HealthcheckResponse struct {
 
 type Item struct{}
 
-// Inverntory Service Health godoc
+// Inventory Service Health godoc
 //
 //	@Summary		Health check
 //	@Description	Returns service health check response
@@ -39,7 +39,7 @@ func GetInventoryHealth(w http.ResponseWriter, r *http.Request) {
 //	@Produce		json
 //	@Success		200	{array}	Item
 //	@Router			/items [get]
-func GetItems(w http.ResponseWriter, r *http.Response) {
+func GetItems(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Not implemented", http.StatusNotImplemented)
 }
 
@@ -51,7 +51,7 @@ func GetItems(w http.ResponseWriter, r *http.Response) {
 //	@Produce		json
 //	@Success		201	{object}	Item
 //	@Router			/items [post]
-func CreateItem(w http.ResponseWriter, r *http.Response) {
+func CreateItem(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Not implemented", http.StatusNotImplemented)
 }
 
@@ -63,7 +63,7 @@ func CreateItem(w http.ResponseWriter, r *http.Response) {
 //	@Produce		json
 //	@Success		200	{object}	Item
 //	@Router			/items/{id} [get]
-func GetItem(w http.ResponseWriter, r *http.Response) {
+func GetItem(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Not implemented", http.StatusNotImplemented)
 }
 
@@ -75,7 +75,7 @@ func GetItem(w http.ResponseWriter, r *http.Response) {
 //	@Produce		json
 //	@Success		204	{object}	Item
 //	@Router			/items/{id} [put]
-func UpdateItem(w http.ResponseWriter, r *http.Response) {
+func UpdateItem(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "not implemented", http.StatusNotImplemented)
 }
 
@@ -87,7 +87,7 @@ func UpdateItem(w http.ResponseWriter, r *http.Response) {
 //	@Produce		json
 //	@Success		204	{object}	Item
 //	@Router			/items/{id} [delete]
-func DeleteItem(w http.ResponseWriter, r *http.Response) {
+func DeleteItem(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "not implemented", http.StatusNotImplemented)
 }
 
@@ -99,7 +99,7 @@ func DeleteItem(w http.ResponseWriter, r *http.Response) {
 //	@Produce		json
 //	@Success		204	{object}	Item
 //	@Router			/items/{id}/stock [put]
-func UpdateItemStock(w http.ResponseWriter, r *http.Response) {
+func UpdateItemStock(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "not implemented", http.StatusNotImplemented)
 }
 
@@ -111,6 +111,6 @@ func UpdateItemStock(w http.ResponseWriter, r *http.Response) {
 //	@Produce		json
 //	@Success		200	{array}	Item
 //	@Router			/items/low-stock [get]
-func GetLowStockItems(w http.ResponseWriter, r *http.Response) {
+func GetLowStockItems(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "not implemented", http.StatusNotImplemented)
 }

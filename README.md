@@ -21,12 +21,16 @@ This repository contains a Go-based microservices architecture with an API Gatew
 │   └── telemetry
 ├── internal
 │   └── gateway
-└── manifests
-    ├── Dockerfile
-    ├── docker-compose.yaml
-    ├── gateway
-    ├── inventory
-    ├── shipment
+├── manifests
+│   ├── Dockerfile
+│   ├── docker-compose.yaml
+│   ├── gateway
+│   ├── inventory
+│   ├── shipment
+│   └── telemetry
+└── migrations
+    ├── Makefile
+    ├── logistics
     └── telemetry
 ```
 
@@ -39,6 +43,19 @@ This repository contains a Go-based microservices architecture with an API Gatew
 - Go 1.25+
 - Docker & Docker Compose
 - Make (recommended)
+
+
+### 🔐 Environment Variables
+
+Environment variables are managed via `.env`
+
+```bash
+SHIPMENT_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5432/shipment_db?sslmode=disable
+INVENTORY_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5433/inventory_db?sslmode=disable
+TELEMETRY_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5434/telemetry_db?sslmode=disable
+```
+
+> ⚠️ Do not commit `.env` files (they are ignored by `.gitignore`)
 
 ---
 
@@ -137,14 +154,6 @@ Access the API documentation at:
 http://localhost:8080/api
 ```
 
----
-
-## 🔐 Environment Variables
-
-- Environment variables are managed via `.env`
-- A sample configuration should be stored in `.env.example`
-
-> ⚠️ Do not commit `.env` files (they are ignored by `.gitignore`)
 
 ---
 
