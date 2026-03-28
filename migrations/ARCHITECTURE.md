@@ -95,6 +95,7 @@ temperature, humidity, GPS coordinates.
 #### Data Model
 
 ```mermaid
+erDiagram
     SENSOR {
         uuid            id PK
         uuid            container_id FK
