@@ -28,6 +28,8 @@
 !cmd/**
 !internal/
 !internal/**
+!migrations/
+!migrations/**
 
 # --- Infrastructure / deployment ---
 !manifests/
