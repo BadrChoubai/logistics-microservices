@@ -50,8 +50,7 @@ This repository contains a Go-based microservices architecture with an API Gatew
 Environment variables are managed via `.env`
 
 ```bash
-SHIPMENT_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5432/shipment_db?sslmode=disable
-INVENTORY_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5433/inventory_db?sslmode=disable
+LOGISTICS_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5432/logistics_db?sslmode=disable
 TELEMETRY_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5434/telemetry_db?sslmode=disable
 ```
 
@@ -86,6 +85,25 @@ docker compose -f manifests/docker-compose.yaml down
 ```bash
 docker compose -f manifests/docker-compose.yaml logs -f gateway
 ```
+
+## 🗄️ Database Access
+
+Connection strings are defined in `.env` (see above). For local development with a GUI client:
+
+| Database      | URL                                              |
+|---------------|--------------------------------------------------|
+| logistics_db  | `jdbc:postgresql://localhost:5432/logistics_db`  |
+| telemetry_db  | `jdbc:postgresql://localhost:5434/telemetry_db`  |
+
+**User:** `postgres` / **Password:** `postgres`
+
+> SSL is disabled for local development (`sslmode=disable`).
+
+### DataGrip
+
+1. **+** → **Data Source from URL** → paste the URL from the table above
+2. Enter credentials, click **Download missing driver files** if prompted
+3. **Test Connection** → **OK**
 
 ---
 
