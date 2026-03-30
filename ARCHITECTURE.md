@@ -180,10 +180,10 @@ erDiagram
 
     WAREHOUSE {
         uuid        id PK
-        VARCHAR(50) address
-        VARCHAR(50) city
-        VARCHAR(50) state
-        VARCHAR(50) zip_code
+        VARCHAR(255) address
+        VARCHAR(100) city
+        VARCHAR(100) state
+        VARCHAR(20) zip_code
         timestamp   created_at
         timestamp   updated_at
     }
@@ -218,8 +218,8 @@ erDiagram
     LOCATION_READING {
         uuid            id PK
         uuid            sensor_id FK
-        DECIMAL         latitude "`latitude` is `DECIMAL(9,6)` in the database schema."
-        DECIMAL         longitude "`longitude` is `DECIMAL(9,6)` in the database schema."
+        DECIMAL         latitude 
+        DECIMAL         longitude
         timestamp       recorded_at
         timestamp       created_at
     }
@@ -236,6 +236,9 @@ erDiagram
     SENSOR ||--o{ LOCATION_READING : "produces"
     SENSOR ||--o{ SECURITY_READING : "produces"
 ```
+
+> `latitude` is given this precision `DECIMAL(9,6)` in the database schema.
+> `longitude` is given this precision `DECIMAL(9,6)` in the database schema.
 
 
 ## API Design Principles
