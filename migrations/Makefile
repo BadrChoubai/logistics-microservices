@@ -3,10 +3,10 @@
 ################################################################################
 include ../.env
 
-db/start: # @HELP start database containers
+db/start: # @HELP start database containers in docker compose
 	docker compose -f ../manifests/docker-compose.yaml up -d logistics-db telemetry-db
 
-db/stop:
+db/stop: # @HELP stop database containers in docker compose
 	docker compose -f ../manifests/docker-compose.yaml down logistics-db telemetry-db
 
 migrations/up/logistics: # @HELP run migrations for only logistics database
