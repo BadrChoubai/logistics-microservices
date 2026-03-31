@@ -201,7 +201,7 @@ erDiagram
     SENSOR {
         uuid            id PK
         uuid            container_id FK
-        ENUM            sensor_type "(Environmental, Location, Security)"     
+        ENUM            sensor_type "(Environmental, Location, Security)"
         timestamp       created_at
         timestamp       updated_at
 
@@ -218,7 +218,7 @@ erDiagram
     LOCATION_READING {
         uuid            id PK
         uuid            sensor_id FK
-        DECIMAL         latitude 
+        DECIMAL         latitude
         DECIMAL         longitude
         timestamp       recorded_at
         timestamp       created_at
@@ -237,9 +237,9 @@ erDiagram
     SENSOR ||--o{ SECURITY_READING : "produces"
 ```
 
->   `latitude` is given this precision `DECIMAL(9,6)` in the database schema.
-> 
->   `longitude` is given this precision `DECIMAL(9,6)` in the database schema.
+> `latitude` is given this precision `DECIMAL(9,6)` in the database schema.
+>
+> `longitude` is given this precision `DECIMAL(9,6)` in the database schema.
 
 ## API Design Principles
 

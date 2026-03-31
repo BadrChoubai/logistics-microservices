@@ -44,7 +44,6 @@ This repository contains a Go-based microservices architecture with an API Gatew
 - Docker & Docker Compose
 - Make (recommended)
 
-
 ### 🔐 Environment Variables
 
 Environment variables are managed via `.env`
@@ -90,10 +89,10 @@ docker compose -f manifests/docker-compose.yaml logs -f gateway
 
 Connection strings are defined in `.env` (see above). For local development with a GUI client:
 
-| Database      | URL                                              |
-|---------------|--------------------------------------------------|
-| logistics_db  | `jdbc:postgresql://localhost:5432/logistics_db`  |
-| telemetry_db  | `jdbc:postgresql://localhost:5434/telemetry_db`  |
+| Database     | URL                                             |
+| ------------ | ----------------------------------------------- |
+| logistics_db | `jdbc:postgresql://localhost:5432/logistics_db` |
+| telemetry_db | `jdbc:postgresql://localhost:5434/telemetry_db` |
 
 **User:** `postgres` / **Password:** `postgres`
 
@@ -171,7 +170,6 @@ Access the API documentation at:
 ```
 http://localhost:8080/api
 ```
-
 
 ---
 
