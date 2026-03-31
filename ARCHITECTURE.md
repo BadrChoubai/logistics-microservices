@@ -10,10 +10,10 @@ API gateway, reflecting how real supply chain systems separate these concerns.
 ```text
 ├── api/ # generated using `swag`, and contains API documentation
 ├── cmd/ # contains each application's entrypoint file
-│   ├── gateway/main.go
-│   ├── inventory/main.go
-│   ├── shipment/main.go
-│   └── telemetry/main.go
+│   ├── gateway/main.go
+│   ├── inventory/main.go
+│   ├── shipment/main.go
+│   └── telemetry/main.go
 ├── internal/          # domain logic, handlers, and middleware (not importable externally)
 │   ├── gateway/
 │   ├── shipment/
@@ -147,8 +147,8 @@ erDiagram
         VARCHAR(50) status
         VARCHAR(50) origin
         VARCHAR(50) destination
-        timestamp   created_at
-        timestamp   updated_at
+        timestamptz   created_at
+        timestamptz   updated_at
     }
 
     CONTAINER {
@@ -180,12 +180,12 @@ erDiagram
 
     WAREHOUSE {
         uuid        id PK
-        VARCHAR(255) address
-        VARCHAR(100) city
-        VARCHAR(100) state
-        VARCHAR(20) zip_code
-        timestamp   created_at
-        timestamp   updated_at
+        VARCHAR(255) address "NOT NULL"
+        VARCHAR(100) city "NOT NULL"
+        VARCHAR(100) state "NOT NULL"
+        VARCHAR(20) zip_code "NOT NULL"
+        timestamptz created_at "DEFAULT now()"
+        timestamptz updated_at "DEFAULT now()"
     }
 
     SHIPMENT ||--o{ CONTAINER : "has"
@@ -237,9 +237,9 @@ erDiagram
     SENSOR ||--o{ SECURITY_READING : "produces"
 ```
 
-> `latitude` is given this precision `DECIMAL(9,6)` in the database schema.
-> `longitude` is given this precision `DECIMAL(9,6)` in the database schema.
-
+>   `latitude` is given this precision `DECIMAL(9,6)` in the database schema.
+> 
+>   `longitude` is given this precision `DECIMAL(9,6)` in the database schema.
 
 ## API Design Principles
 
