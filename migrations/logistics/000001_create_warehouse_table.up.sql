@@ -11,7 +11,7 @@ CREATE TABLE warehouse (
     updated_at timestamptz DEFAULT now()
 );
 
--- @function set_warehouse_updated_at
+-- @function set_updated_at
 -- @desc Updates the updated_at column to current timestamp
 -- @returns TRIGGER
 -- @used_by triggers on all tables where updated_at changes on a frequent basis
