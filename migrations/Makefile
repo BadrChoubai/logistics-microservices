@@ -26,7 +26,7 @@ migrations/down/telemetry: # @HELP run teardown migrations for telemetry databas
 	migrate -path ./telemetry -database ${TELEMETRY_DB_CONNECTION_STRING} down 1
 
 migrations/down: # @HELP run teardown migrations for all databases
-migrations/down: migrations/down/logistics migrations/down/telemetry
+migrations/down: migrations/down/telemetry migrations/down/logistics
 
 targets: # @HELP print Makefile targets
 	echo "TARGETS:"
