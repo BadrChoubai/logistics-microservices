@@ -30,6 +30,7 @@
 !internal/**
 !migrations/
 !migrations/**
+migrations/.idea/
 
 # --- Infrastructure / deployment ---
 !manifests/
