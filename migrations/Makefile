@@ -2,12 +2,13 @@
 # Migrations Tasks
 ################################################################################
 include ../.env
+COMPOSE_FILE := ../manifests/docker-compose.yaml
 
 db/start: # @HELP start database containers in docker compose
-	docker compose -f ../manifests/docker-compose.yaml up -d logistics-db telemetry-db
+	docker compose -f $(COMPOSE_FILE) up -d logistics-db telemetry-db
 
 db/stop: # @HELP stop database containers in docker compose
-	docker compose -f ../manifests/docker-compose.yaml down logistics-db telemetry-db
+	docker compose -f $(COMPOSE_FILE) down logistics-db telemetry-db
 
 migrations/up/logistics: # @HELP run migrations for only logistics database
 	migrate -path ./logistics -database ${LOGISTICS_DB_CONNECTION_STRING} up
