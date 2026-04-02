@@ -2,12 +2,13 @@
 # Migrations Tasks
 ################################################################################
 include ../.env
+COMPOSE_FILE := ../manifests/docker-compose.yaml
 
-db/start: # @HELP start database containers
-	docker compose -f ../manifests/docker-compose.yaml up -d logistics-db telemetry-db
+db/start: # @HELP start database containers in docker compose
+	docker compose -f $(COMPOSE_FILE) up -d logistics-db telemetry-db
 
-db/stop:
-	docker compose -f ../manifests/docker-compose.yaml down logistics-db telemetry-db
+db/stop: # @HELP stop database containers in docker compose
+	docker compose -f $(COMPOSE_FILE) down logistics-db telemetry-db
 
 migrations/up/logistics: # @HELP run migrations for only logistics database
 	migrate -path ./logistics -database ${LOGISTICS_DB_CONNECTION_STRING} up
@@ -26,7 +27,7 @@ migrations/down/telemetry: # @HELP run teardown migrations for telemetry databas
 	migrate -path ./telemetry -database ${TELEMETRY_DB_CONNECTION_STRING} down 1
 
 migrations/down: # @HELP run teardown migrations for all databases
-migrations/down: migrations/down/logistics migrations/down/telemetry
+migrations/down: migrations/down/telemetry migrations/down/logistics
 
 targets: # @HELP print Makefile targets
 	echo "TARGETS:"

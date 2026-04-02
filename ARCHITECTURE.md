@@ -10,11 +10,10 @@ API gateway, reflecting how real supply chain systems separate these concerns.
 ```text
 ├── api/ # generated using `swag`, and contains API documentation
 ├── cmd/ # contains each application's entrypoint file
-│   ├── gateway
-│   │   └── main.go
-│   ├── inventory
-│   ├── shipment
-│   └── telemetry
+│   ├── gateway/main.go
+│   ├── inventory/main.go
+│   ├── shipment/main.go
+│   └── telemetry/main.go
 ├── internal/          # domain logic, handlers, and middleware (not importable externally)
 │   ├── gateway/
 │   ├── shipment/
@@ -27,6 +26,10 @@ API gateway, reflecting how real supply chain systems separate these concerns.
 │   ├── inventory/          # Kubernetes manifests
 │   ├── shipment/           # Kubernetes manifests
 │   └── telemetry/          # Kubernetes manifests
+├── migrations
+│   ├── Makefile # Makefile for running migrations
+│   ├── logistics
+│   └── telemetry
 │
 ├── ARCHITECTURE.md # This document
 ├── LICENSE # license
@@ -131,7 +134,10 @@ flowchart TD
 
 ## Data Model
 
-> Per-Service documentation for this section is located in [migrations/ARCHITECTURE.md](./migrations/ARCHITECTURE.md)
+This section shows the Architecture diagram for both the Logistics database and
+the Telemetry database.
+
+### Logistics
 
 ```mermaid
 erDiagram
@@ -141,8 +147,8 @@ erDiagram
         VARCHAR(50) status
         VARCHAR(50) origin
         VARCHAR(50) destination
-        timestamp   created_at
-        timestamp   updated_at
+        timestamptz   created_at
+        timestamptz   updated_at
     }
 
     CONTAINER {
@@ -174,23 +180,28 @@ erDiagram
 
     WAREHOUSE {
         uuid        id PK
-        VARCHAR(50) address
-        VARCHAR(50) city
-        VARCHAR(50) state
-        VARCHAR(50) zip_code
-        timestamp   created_at
-        timestamp   updated_at
+        VARCHAR(255) address "NOT NULL"
+        VARCHAR(100) city "NOT NULL"
+        VARCHAR(100) state "NOT NULL"
+        VARCHAR(20) zip_code "NOT NULL"
+        timestamptz created_at "DEFAULT now()"
+        timestamptz updated_at "DEFAULT now()"
     }
 
     SHIPMENT ||--o{ CONTAINER : "has"
     SHIPMENT ||--o{ SHIPMENT_ITEM : "contains"
     SHIPMENT_ITEM }o--|| INVENTORY : "references"
     INVENTORY }o--|| WAREHOUSE : "stored in"
+```
 
+### Telemetry
+
+```mermaid
+erDiagram
     SENSOR {
         uuid            id PK
         uuid            container_id FK
-        ENUM            sensor_type "(Environmental, Location, Security)"     
+        ENUM            sensor_type "(Environmental, Location, Security)"
         timestamp       created_at
         timestamp       updated_at
 
@@ -207,8 +218,8 @@ erDiagram
     LOCATION_READING {
         uuid            id PK
         uuid            sensor_id FK
-        DECIMAL         latitude "`latitude` is `DECIMAL(9,6)` in the database schema."
-        DECIMAL         longitude "`longitude` is `DECIMAL(9,6)` in the database schema."
+        DECIMAL         latitude
+        DECIMAL         longitude
         timestamp       recorded_at
         timestamp       created_at
     }
@@ -225,6 +236,11 @@ erDiagram
     SENSOR ||--o{ LOCATION_READING : "produces"
     SENSOR ||--o{ SECURITY_READING : "produces"
 ```
+
+> `latitude` is given this precision `DECIMAL(9,6)` in the database schema.
+>
+> `longitude` is given this precision `DECIMAL(9,6)` in the database schema.
+
 ## API Design Principles
 
 1. **REST externally**, gRPC internally — all client-facing endpoints are REST;
@@ -232,13 +248,9 @@ erDiagram
    calls benefit from strongly typed contracts and lower latency than JSON over
    HTTP.
 
-2. **No shared databases** — each service owns its data exclusively; no service
-   reads or writes another service's database directly, all cross-service data
-   access goes through the API.
-
-3. **All external traffic enters through the gateway** — services are not
+2. **All external traffic enters through the gateway** — services are not
    directly accessible, the gateway is the only public entry point.
 
-4. **Versioning from day one** — all endpoints are prefixed with `/api/v1` so
+3. **Versioning from day one** — all endpoints are prefixed with `/api/v1` so
    breaking changes can be introduced under `/api/v2` without affecting existing
    clients.
