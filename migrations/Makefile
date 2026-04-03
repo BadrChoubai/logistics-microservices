@@ -10,6 +10,12 @@ db/start: # @HELP start database containers in docker compose
 db/stop: # @HELP stop database containers in docker compose
 	docker compose -f $(COMPOSE_FILE) down logistics-db telemetry-db
 
+db/connect/logistics: # @HELP connect to logistics db
+	psql ${LOGISTICS_DB_CONNECTION_STRING} 
+
+db/connect/telemetry: # @HELP connect to telemetry db
+	psql ${LOGISTICS_DB_CONNECTION_STRING} 
+
 migrations/up/logistics: # @HELP run migrations for only logistics database
 	migrate -path ./logistics -database ${LOGISTICS_DB_CONNECTION_STRING} up
 
