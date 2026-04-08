@@ -44,6 +44,26 @@ This repository contains a Go-based microservices architecture with an API Gatew
 - Docker & Docker Compose
 - Make (recommended)
 
+### Development Tools
+
+#### `golangci-lint`
+
+Used to run linters 
+
+```bash
+# binary will be $(go env GOPATH)/bin/golangci-lint
+curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.11.4
+```
+
+#### `swag`
+
+Used to generate API docs
+
+```bash
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+
+
 ### 🔐 Environment Variables
 
 Environment variables are managed via `.env`
