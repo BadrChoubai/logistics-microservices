@@ -13,7 +13,7 @@ import (
 // @title						Inventory Service
 // @version					1.0.0
 // @description				Inventory Service for the Logistics Services API platform
-// @host						localhost:8081
+// @host						localhost:8082
 // @BasePath					/
 // @securityDefinitions.apikey	BearerAuth
 // @in							header

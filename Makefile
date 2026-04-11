@@ -7,6 +7,7 @@ BUILD_DIRS := bin
 OS := $(if $(GOOS),$(GOOS),$(shell GOTOOLCHAIN=local go env GOOS))
 ARCH := $(if $(GOARCH),$(GOARCH),$(shell GOTOOLCHAIN=local go env GOARCH))
 GO := $(if $(GOVERSION),$(GOVERSION),$(shell GOTOOLCHAIN=local go env GOVERSION))
+DOCKER := podman
 
 SHELL := /usr/bin/env bash -o errexit -o pipefail -o nounset
 GOFLAGS ?=
@@ -23,19 +24,24 @@ build: deps ci $(BUILD_DIRS) $(addprefix build-,$(BINS))
 $(BUILD_DIRS):
 	mkdir -p $@
 
+
 $(addprefix build-,$(BINS)): build-%:
 	GOOS=$(OS) GOARCH=$(ARCH) go build -o bin/$* $(GOFLAGS) ./cmd/$*/main.go
 
+
 ci: # @HELP ci steps(lint, test)
 ci: lint test
+
 
 clean: # @HELP clean build artifacts
 clean: image-clean
 	rm -rf ./bin
 
+
 docs: # @HELP generate Swagger API documentation
 docs: $(addprefix docs-,$(BINS))
 	swag fmt
+
 
 $(addprefix docs-,$(BINS)): docs-%:
 	swag init --generalInfo main.go \
@@ -43,26 +49,28 @@ $(addprefix docs-,$(BINS)): docs-%:
 		--parseInternal \
 		-o api/swagger/$*
 
+
 deps: # @HELP go mod tidy, download
 deps:
 	go mod tidy
 	go mod download
 
-image: # @HELP build all docker images
+
+image: # @HELP build all container images
 image: $(addprefix image-,$(BINS))
 
+
 $(addprefix image-,$(BINS)): image-%:
-	@if docker image inspect logistics-$*:$(VERSION) >/dev/null 2>&1; then \
+	@if $(DOCKER) image inspect logistics-$*:$(VERSION) >/dev/null 2>&1; then \
 		echo "Image logistics-$*:$(VERSION) already exists"; \
 	else \
-		docker build --build-arg SERVICE=$* -t logistics-$*:$(VERSION) -f ./manifests/Dockerfile .; \
+		$(DOCKER) build --build-arg SERVICE=$* -t logistics-$*:$(VERSION) -f ./manifests/Dockerfile .; \
 	fi
-
 
 
 image-clean: # @HELP remove all built images
 image-clean:
-	$(foreach bin, $(BINS), docker rmi logistics-$(bin):$(VERSION) || true;)
+	$(foreach bin, $(BINS), $(DOCKER) rmi logistics-$(bin):$(VERSION) || true;)
 
 
 lint: # @HELP lint with golangci-lint
@@ -86,6 +94,7 @@ help:
 	echo "  ARCH = $(ARCH)"
 	echo "  GOFLAGS = $(GOFLAGS)"
 	echo "  GO = $(GO)"
+	echo "  DOCKER = $(DOCKER)"
 	echo
 	echo "TARGETS:"
 	grep -E '^.*: *# *@HELP' $(MAKEFILE_LIST)     \

@@ -44,6 +44,33 @@ This repository contains a Go-based microservices architecture with an API Gatew
 - Docker & Docker Compose
 - Make (recommended)
 
+### Development Tools
+
+#### `golangci-lint`
+
+Used to run linters 
+
+```bash
+# binary will be $(go env GOPATH)/bin/golangci-lint
+curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.11.4
+```
+
+#### `swag`
+
+Used to generate API docs
+
+```bash
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+
+#### `migrate`
+
+Used to run database migrations
+
+```bash
+go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+```
+
 ### 🔐 Environment Variables
 
 Environment variables are managed via `.env`
@@ -60,13 +87,13 @@ TELEMETRY_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5434/telem
 ### 1. Build & Run with Docker Compose
 
 ```bash
-docker compose -f manifests/docker-compose.yaml up --build
+[docker|podman] compose -f manifests/docker-compose.yaml up --build
 ```
 
 Or run in detached mode:
 
 ```bash
-docker compose -f manifests/docker-compose.yaml up -d --build
+[docker|podman] compose -f manifests/docker-compose.yaml up -d --build
 ```
 
 ---
@@ -74,7 +101,7 @@ docker compose -f manifests/docker-compose.yaml up -d --build
 ### 2. Stop Services
 
 ```bash
-docker compose -f manifests/docker-compose.yaml down
+[docker|podman] compose -f manifests/docker-compose.yaml down
 ```
 
 ---
@@ -82,7 +109,7 @@ docker compose -f manifests/docker-compose.yaml down
 ### 3. View Logs
 
 ```bash
-docker compose -f manifests/docker-compose.yaml logs -f gateway
+[docker | podman] compose -f manifests/docker-compose.yaml logs -f gateway
 ```
 
 ## 🗄️ Database Access

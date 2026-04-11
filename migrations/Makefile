@@ -3,12 +3,13 @@
 ################################################################################
 include ../.env
 COMPOSE_FILE := ../manifests/docker-compose.yaml
+DOCKER := podman
 
 db/start: # @HELP start database containers in docker compose
-	docker compose -f $(COMPOSE_FILE) up -d logistics-db telemetry-db
+	$(DOCKER) compose -f $(COMPOSE_FILE) up -d logistics-db telemetry-db
 
 db/stop: # @HELP stop database containers in docker compose
-	docker compose -f $(COMPOSE_FILE) down logistics-db telemetry-db
+	$(DOCKER) compose -f $(COMPOSE_FILE) down logistics-db telemetry-db
 
 db/connect/logistics: # @HELP connect to logistics db
 	psql ${LOGISTICS_DB_CONNECTION_STRING} 
