@@ -16,6 +16,11 @@ import (
 	"github.com/BadrChoubai/logistics-microservices/internal/server"
 )
 
+type application struct {
+	config *config.Gateway
+	Log    *logger.Logger
+}
+
 // @title						Logistics Services API Gateway
 // @version					1.0.0
 // @description				API Gateway for the Logistics Services API platform
@@ -33,7 +38,7 @@ func main() {
 }
 
 func run(ctx context.Context, stdout io.Writer, getenv func(string) string) error {
-	// CONFIG_PATH can be overridden per environment (Docker, K8s, local).
+	// Load configuration
 	cfgPath := getenv("CONFIG_PATH")
 	if cfgPath == "" {
 		cfgPath = "manifests/gateway/config.json"
@@ -44,40 +49,45 @@ func run(ctx context.Context, stdout io.Writer, getenv func(string) string) erro
 		return err
 	}
 
-	log := logger.NewLogger(stdout, cfg.LogLevel)
-	srv, err := server.NewServer(cfg.Port, log)
+	app := &application{
+		config: cfg,
+		Log:    logger.NewLogger(stdout, cfg.LogLevel),
+	}
+
+	srv, err := server.NewServer(app.config.Port, app.Log)
 
 	if err != nil {
 		return err
 	}
 
-	shutdownError := make(chan error)
+	// Create a context that cancels on SIGINT or SIGTERM
+	signalCtx, stop := signal.NotifyContext(ctx, syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
 
+	// Run the server in a goroutine
+	serverErr := make(chan error, 1)
 	go func() {
-		quit := make(chan os.Signal, 1)
-		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-		s := <-quit
-
-		log.Info("caught signal", "signal", s.String())
-
-		shutdownCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
-		defer cancel()
-
-		if err := srv.Shutdown(shutdownCtx); err != nil {
-			shutdownError <- err
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			serverErr <- err
 			return
 		}
-
-		shutdownError <- nil
+		serverErr <- nil
 	}()
 
-	err = srv.ListenAndServe()
-	if !errors.Is(err, http.ErrServerClosed) {
+	// Wait for shutdown signal
+	<-signalCtx.Done()
+	app.Log.Info("Shutdown signal received")
+
+	// Perform graceful shutdown with timeout
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	if err := srv.Shutdown(shutdownCtx); err != nil {
 		return err
 	}
 
-	err = <-shutdownError
-	if err != nil {
+	// Check if server encountered other errors
+	if err := <-serverErr; err != nil {
 		return err
 	}
 
