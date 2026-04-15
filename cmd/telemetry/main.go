@@ -37,7 +37,7 @@ func run(ctx context.Context, stdout io.Writer, getenv func(string) string) erro
 	// CONFIG_PATH can be overridden per environment (Docker, K8s, local).
 	cfgPath := getenv("CONFIG_PATH")
 	if cfgPath == "" {
-		cfgPath = "manifests/gateway/config.json"
+		cfgPath = "manifests/telemetry/config.json"
 	}
 
 	cfg, err := config.Load[*config.Service](cfgPath)
