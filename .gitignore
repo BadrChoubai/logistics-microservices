@@ -37,6 +37,7 @@ migrations/.idea/
 !manifests/**
 !docker-compose.yaml
 !docker-compose.yml
+!.golangci.yml
 
 # --- Allow directory structure markers ---
 !.gitkeep
