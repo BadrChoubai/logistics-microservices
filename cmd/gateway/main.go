@@ -38,7 +38,7 @@ func main() {
 }
 
 func run(ctx context.Context, stdout io.Writer, getenv func(string) string) error {
-	// CONFIG_PATH can be overridden per environment (Docker, K8s, local).
+	// Load configuration
 	cfgPath := getenv("CONFIG_PATH")
 	if cfgPath == "" {
 		cfgPath = "manifests/gateway/config.json"
