@@ -48,7 +48,7 @@ This repository contains a Go-based microservices architecture with an API Gatew
 
 #### `golangci-lint`
 
-Used to run linters 
+Used to run linters
 
 ```bash
 # binary will be $(go env GOPATH)/bin/golangci-lint
