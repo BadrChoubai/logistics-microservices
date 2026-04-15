@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -12,9 +11,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/BadrChoubai/logistics-microservices/cmd/gateway/server"
 	"github.com/BadrChoubai/logistics-microservices/internal/config"
 	"github.com/BadrChoubai/logistics-microservices/internal/observability/logger"
+	"github.com/BadrChoubai/logistics-microservices/internal/server"
 )
 
 // @title						Logistics Services API Gateway
@@ -45,8 +44,8 @@ func run(ctx context.Context, stdout io.Writer, getenv func(string) string) erro
 		return err
 	}
 
-	logger := logger.NewLogger(stdout, cfg.LogLevel)
-	srv, err := server.NewServer(cfg.Port, logger)
+	log := logger.NewLogger(stdout, cfg.LogLevel)
+	srv, err := server.NewServer(cfg.Port, log)
 
 	if err != nil {
 		return err
@@ -59,14 +58,14 @@ func run(ctx context.Context, stdout io.Writer, getenv func(string) string) erro
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 		s := <-quit
 
-		logger.Info(fmt.Sprintf("caught signal: %s", s))
+		log.Info("caught signal", "signal", s.String())
 
 		shutdownCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 		defer cancel()
 
-		err := srv.Shutdown(shutdownCtx)
-		if err != nil {
+		if err := srv.Shutdown(shutdownCtx); err != nil {
 			shutdownError <- err
+			return
 		}
 
 		shutdownError <- nil

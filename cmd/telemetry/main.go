@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -12,9 +11,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/BadrChoubai/logistics-microservices/cmd/telemetry/server"
 	"github.com/BadrChoubai/logistics-microservices/internal/config"
 	"github.com/BadrChoubai/logistics-microservices/internal/observability/logger"
+	"github.com/BadrChoubai/logistics-microservices/internal/server"
 )
 
 // @title						Telemetry Service
@@ -37,7 +36,7 @@ func run(ctx context.Context, stdout io.Writer, getenv func(string) string) erro
 	// CONFIG_PATH can be overridden per environment (Docker, K8s, local).
 	cfgPath := getenv("CONFIG_PATH")
 	if cfgPath == "" {
-		cfgPath = "manifests/gateway/config.json"
+		cfgPath = "manifests/telemetry/config.json"
 	}
 
 	cfg, err := config.Load[*config.Service](cfgPath)
@@ -45,28 +44,28 @@ func run(ctx context.Context, stdout io.Writer, getenv func(string) string) erro
 		return err
 	}
 
-	logger := logger.NewLogger(stdout, cfg.LogLevel)
-	srv, err := server.NewServer(cfg.Port, logger)
+	log := logger.NewLogger(stdout, cfg.LogLevel)
+	srv, err := server.NewServer(cfg.Port, log)
 
 	if err != nil {
 		return err
 	}
 
-	shutdownError := make(chan error)
+	shutdownError := make(chan error, 1)
 
 	go func() {
 		quit := make(chan os.Signal, 1)
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 		s := <-quit
 
-		logger.Info(fmt.Sprintf("caught signal: %s", s))
+		log.Info("caught signal", "signal", s.String())
 
 		shutdownCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 		defer cancel()
 
-		err := srv.Shutdown(shutdownCtx)
-		if err != nil {
+		if err := srv.Shutdown(shutdownCtx); err != nil {
 			shutdownError <- err
+			return
 		}
 
 		shutdownError <- nil
