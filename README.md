@@ -1,4 +1,4 @@
-# Logistics Microservices
+# _Logistique_
 
 This repository contains a Go-based microservices architecture with an API Gateway as the central entry point. The project uses Docker and Docker Compose for local development and service orchestration.
 
