@@ -1,0 +1,10 @@
+{
+  "environment": "development",
+  "log_level": "debug",
+  "http_port": 8080,
+  "routes": {
+    "/inventory/": "http://inventory:8081",
+    "/shipment/":  "http://shipment:8082",
+    "/telemetry/": "http://telemetry:8083"
+  }
+}
