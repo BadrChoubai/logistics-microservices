@@ -2,6 +2,9 @@
   "environment": "development",
   "log_level": "debug",
   "http_port": 8083,
+  "system": {
+      "service_name": "Telemetry"
+  },
   "database": {
     "host": "localhost",
     "port": 5434,
