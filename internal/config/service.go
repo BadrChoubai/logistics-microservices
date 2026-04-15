@@ -17,6 +17,9 @@ type ServiceConfig interface {
 type Service struct {
 	Base
 
+	// System holds system information
+	System SystemConfig `json:"system"`
+
 	// DB holds the database connection settings for this service.
 	DB DatabaseConfig `json:"database"`
 }
@@ -52,6 +55,11 @@ type DatabaseConfig struct {
 	ConnMaxLifetime time.Duration `json:"conn_max_lifetime"`
 }
 
+type SystemConfig struct {
+	// ServiceName is the name of the service
+	ServiceName string `json:"service_name"`
+}
+
 // DSN returns a PostgreSQL connection string for database/sql.
 func (d *DatabaseConfig) DSN() string {
 	return fmt.Sprintf(
@@ -65,9 +73,20 @@ func (s *Service) Validate() error {
 	if err := s.validate(); err != nil {
 		return fmt.Errorf("base: %w", err)
 	}
+	if err := s.System.validate(); err != nil {
+		return fmt.Errorf("system: %w", err)
+	}
 	if err := s.DB.validate(); err != nil {
 		return fmt.Errorf("db: %w", err)
 	}
+	return nil
+}
+
+func (s *SystemConfig) validate() error {
+	if strings.TrimSpace(s.ServiceName) == "" {
+		return fmt.Errorf("service_name is required")
+	}
+
 	return nil
 }
 

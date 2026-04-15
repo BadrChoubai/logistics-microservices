@@ -2,6 +2,9 @@
   "environment": "development",
   "log_level": "debug",
   "http_port": 8082,
+  "system": {
+      "service_name": "Inventory"
+  },
   "database": {
     "host": "localhost",
     "port": 5432,
