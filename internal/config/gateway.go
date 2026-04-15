@@ -23,7 +23,7 @@ type Gateway struct {
 
 // Validate checks that the Gateway config is complete and sensible.
 func (g *Gateway) Validate() error {
-	if err := g.Base.validate(); err != nil {
+	if err := g.validate(); err != nil {
 		return fmt.Errorf("base: %w", err)
 	}
 	if len(g.Routes) == 0 {

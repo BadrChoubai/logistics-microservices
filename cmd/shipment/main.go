@@ -1,13 +1,20 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
-	_ "github.com/BadrChoubai/logistics-microservices/api/swagger/shipment"
-	"github.com/BadrChoubai/logistics-microservices/internal/shipment/handler"
-	httpSwagger "github.com/swaggo/http-swagger"
+	"github.com/BadrChoubai/logistics-microservices/cmd/shipment/server"
+	"github.com/BadrChoubai/logistics-microservices/internal/config"
+	"github.com/BadrChoubai/logistics-microservices/internal/observability/logger"
 )
 
 // @title						Shipment Service
@@ -19,21 +26,58 @@ import (
 // @in							header
 // @name						Authorization
 func main() {
-	if err := run(); err != nil {
+	ctx := context.Background()
+
+	if err := run(ctx, os.Stdout, os.Getenv); err != nil {
 		log.Fatalln(err)
 	}
 }
 
-func run() error {
-	mux := http.NewServeMux()
+func run(ctx context.Context, stdout io.Writer, getenv func(string) string) error {
+	// CONFIG_PATH can be overridden per environment (Docker, K8s, local).
+	cfgPath := getenv("CONFIG_PATH")
+	if cfgPath == "" {
+		cfgPath = "manifests/shipment/config.json"
+	}
 
-	mux.Handle("/swagger/", httpSwagger.Handler(
-		httpSwagger.URL("http://localhost:8081/swagger/doc.json"),
-	))
-	mux.HandleFunc("/health", handler.GetShipmentHealth)
-	fmt.Println("server running on localhost:8081")
+	cfg, err := config.Load[*config.Service](cfgPath)
+	if err != nil {
+		return err
+	}
 
-	err := http.ListenAndServe(":8081", mux)
+	logger := logger.NewLogger(stdout, cfg.LogLevel)
+	srv, err := server.NewServer(cfg.Port, logger)
+
+	if err != nil {
+		return err
+	}
+
+	shutdownError := make(chan error)
+
+	go func() {
+		quit := make(chan os.Signal, 1)
+		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+		s := <-quit
+
+		logger.Info(fmt.Sprintf("caught signal: %s", s))
+
+		shutdownCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+		defer cancel()
+
+		err := srv.Shutdown(shutdownCtx)
+		if err != nil {
+			shutdownError <- err
+		}
+
+		shutdownError <- nil
+	}()
+
+	err = srv.ListenAndServe()
+	if !errors.Is(err, http.ErrServerClosed) {
+		return err
+	}
+
+	err = <-shutdownError
 	if err != nil {
 		return err
 	}
