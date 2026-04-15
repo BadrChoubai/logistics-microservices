@@ -11,9 +11,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/BadrChoubai/logistics-microservices/cmd/inventory/server"
 	"github.com/BadrChoubai/logistics-microservices/internal/config"
 	"github.com/BadrChoubai/logistics-microservices/internal/observability/logger"
+	"github.com/BadrChoubai/logistics-microservices/internal/server"
 )
 
 // @title						Inventory Service
