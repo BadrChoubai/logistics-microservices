@@ -39,18 +39,21 @@ const (
 // Load reads cfg from a JSON file at path. Finally it calls Validate() if cfg
 // implements Validator.
 //
+// If path is empty, Load returns an error.
 // If the file does not exist, Load returns an error.
 func Load[T Validator](path string) (T, error) {
 	var cfg T
 
-	if path != "" {
-		data, err := os.ReadFile(path)
-		if err != nil {
-			return cfg, fmt.Errorf("config: read %q: %w", path, err)
-		}
-		if err := json.Unmarshal(data, &cfg); err != nil {
-			return cfg, fmt.Errorf("config: parse %q: %w", path, err)
-		}
+	if path == "" {
+		return cfg, fmt.Errorf("config path is required")
+	}
+
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return cfg, fmt.Errorf("config: read %q: %w", path, err)
+	}
+	if err := json.Unmarshal(data, &cfg); err != nil {
+		return cfg, fmt.Errorf("config: parse %q: %w", path, err)
 	}
 
 	if err := cfg.Validate(); err != nil {

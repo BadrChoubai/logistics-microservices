@@ -1,0 +1,16 @@
+{
+  "environment": "development",
+  "log_level": "debug",
+  "http_port": 8082,
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "name": "logistics_db",
+    "user": "postgres",
+    "password": "postgres",
+    "ssl_mode": "disable",
+    "max_open_conns": 0,
+    "max_idle_conns": 0,
+    "conn_max_lifetime": 0
+  }
+}

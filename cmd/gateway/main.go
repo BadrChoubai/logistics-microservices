@@ -9,11 +9,9 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"sync"
 	"syscall"
 	"time"
 
-	_ "github.com/BadrChoubai/logistics-microservices/api/swagger/gateway"
 	"github.com/BadrChoubai/logistics-microservices/cmd/gateway/server"
 	"github.com/BadrChoubai/logistics-microservices/internal/config"
 	"github.com/BadrChoubai/logistics-microservices/internal/observability/logger"
@@ -36,8 +34,6 @@ func main() {
 }
 
 func run(ctx context.Context, stdout io.Writer, getenv func(string) string) error {
-	var wg sync.WaitGroup
-
 	// CONFIG_PATH can be overridden per environment (Docker, K8s, local).
 	cfgPath := getenv("CONFIG_PATH")
 	if cfgPath == "" {
@@ -73,7 +69,6 @@ func run(ctx context.Context, stdout io.Writer, getenv func(string) string) erro
 			shutdownError <- err
 		}
 
-		wg.Wait()
 		shutdownError <- nil
 	}()
 

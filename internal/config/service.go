@@ -18,7 +18,7 @@ type Service struct {
 	Base
 
 	// DB holds the database connection settings for this service.
-	DB DatabaseConfig `json:"db"`
+	DB DatabaseConfig `json:"database"`
 }
 
 // DatabaseConfig holds PostgreSQL connection parameters.
@@ -62,7 +62,7 @@ func (d *DatabaseConfig) DSN() string {
 
 // Validate checks that the Service config is complete and sensible.
 func (s *Service) Validate() error {
-	if err := s.Base.validate(); err != nil {
+	if err := s.validate(); err != nil {
 		return fmt.Errorf("base: %w", err)
 	}
 	if err := s.DB.validate(); err != nil {
