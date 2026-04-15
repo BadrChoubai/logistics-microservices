@@ -64,7 +64,7 @@ $(addprefix image-,$(BINS)): image-%:
 	@if $(DOCKER) image inspect logistics-$*:$(VERSION) >/dev/null 2>&1; then \
 		echo "Image logistics-$*:$(VERSION) already exists"; \
 	else \
-		$(DOCKER) build --build-arg SERVICE=$* -t logistics-$*:$(VERSION) -f ./manifests/Dockerfile .; \
+		$(DOCKER) build --build-arg SERVICE=$* -t logistics-$*:$(VERSION) -f ./manifests/$*/Dockerfile .; \
 	fi
 
 
