@@ -16,6 +16,11 @@ import (
 	"github.com/BadrChoubai/logistics-microservices/internal/server"
 )
 
+type application struct {
+	config *config.Gateway
+	Log    *logger.Logger
+}
+
 // @title						Logistics Services API Gateway
 // @version					1.0.0
 // @description				API Gateway for the Logistics Services API platform
