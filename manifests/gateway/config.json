@@ -4,6 +4,6 @@
   "http_port": 8080,
   "routes": {
     "/shipment/":  "http://shipment:8081",
-    "/telemetry/": "http://telemetry:8082"
+    "/telemetry/": "http://telemetry:8083"
   }
 }
