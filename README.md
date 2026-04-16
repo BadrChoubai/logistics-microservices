@@ -16,18 +16,18 @@ This repository contains a Go-based microservices architecture with an API Gatew
 │   └── swagger
 ├── cmd
 │   ├── gateway
-│   ├── inventory
 │   ├── shipment
 │   └── telemetry
 ├── internal
 │   └── gateway
 ├── manifests
-│   ├── Dockerfile
 │   ├── docker-compose.yaml
 │   ├── gateway
-│   ├── inventory
+│   │   └── gateway
 │   ├── shipment
+│   │   └── Dockerfile
 │   └── telemetry
+│       └── Dockerfile
 └── migrations
     ├── Makefile
     ├── logistics

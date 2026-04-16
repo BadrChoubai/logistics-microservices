@@ -2,7 +2,7 @@
 
 This repository contains source code for a logistics platform built to demonstrate
 a production-style microservices architecture using Go, Docker, and Kubernetes. It
-consists of three domain services—shipment, inventory, and telemetry—behind an
+consists of three domain services—shipment and telemetry—behind an
 API gateway, reflecting how real supply chain systems separate these concerns.
 
 ## Project Structure
@@ -11,21 +11,20 @@ API gateway, reflecting how real supply chain systems separate these concerns.
 ├── api/ # generated using `swag`, and contains API documentation
 ├── cmd/ # contains each application's entrypoint file
 │   ├── gateway/main.go
-│   ├── inventory/main.go
 │   ├── shipment/main.go
 │   └── telemetry/main.go
 ├── internal/          # domain logic, handlers, and middleware (not importable externally)
 │   ├── gateway/
 │   ├── shipment/
-│   ├── inventory/
 │   └── telemetry/
 ├── manifests/
-│   ├── Dockerfile          # single Dockerfile for all services, parameterized by SERVICE build arg
 │   ├── docker-compose.yaml # local development orchestration
 │   ├── gateway/            # Kubernetes manifests
-│   ├── inventory/          # Kubernetes manifests
+│   │   └── Dockerfile
 │   ├── shipment/           # Kubernetes manifests
+│   │   └── Dockerfile
 │   └── telemetry/          # Kubernetes manifests
+│       └── Dockerfile
 ├── migrations
 │   ├── Makefile # Makefile for running migrations
 │   ├── logistics
@@ -47,10 +46,7 @@ The Shipment service owns the creation of shipments, status transitions, and rou
 information.
 
 - Database: PostgreSQL – shipments are relational by nature, a shipment has a
-  status history, waypoints, and references inventory items
-- gRPC: Receives calls from Inventory when a shipment status changes to update
-  stock levels; calls Inventory when a shipment is created to verify stock
-  availability.
+  status history and waypoints.
 
 #### Endpoints
 
@@ -63,29 +59,6 @@ information.
 | PUT    | `/api/v1/shipments/{id}`        | Update a shipment           |
 | DELETE | `/api/v1/shipments/{id}`        | Delete a shipment           |
 | GET    | `/api/v1/shipments/{id}/status` | Get shipment status history |
-
-### Inventory
-
-The inventory service owns the item catalog, stock levels, and warehouse
-locations.
-
-- Database: PostgreSQL – inventory is inherently relational, items have
-  categories, locations, and stock thresholds
-- gRPC: calls Shipment to update inventory when a shipment status changes;
-  responds to Shipment when stock availability is checked
-
-#### Endpoints
-
-| Method | Path                       | Description          |
-| ------ | -------------------------- | -------------------- |
-| GET    | `/health`                  | Health check         |
-| GET    | `/api/v1/items`            | List all items       |
-| POST   | `/api/v1/items`            | Create an item       |
-| GET    | `/api/v1/items/{id}`       | Get an item by ID    |
-| PUT    | `/api/v1/items/{id}`       | Update an item       |
-| DELETE | `/api/v1/items/{id}`       | Delete an item       |
-| PUT    | `/api/v1/items/{id}/stock` | Adjust stock level   |
-| GET    | `/api/v1/items/low-stock`  | List low stock items |
 
 ### Telemetry
 
@@ -127,7 +100,6 @@ deployable before all features are complete.
 flowchart TD
     A[Client] --> B{API Gateway}
     B --> C[Shipment] --> D[(Logistics DB)]
-    B --> E[Inventory] --> D[(Logistics DB)]
     B --> G[Telemetry] --> H[(Telemetry DB)]
     C <-->|gRPC| E
 ```
@@ -163,16 +135,6 @@ erDiagram
     SHIPMENT_ITEM {
         uuid        id PK
         uuid        shipment_id FK
-        uuid        inventory_id FK
-        int         quantity
-        timestamp   created_at
-        timestamp   updated_at
-    }
-
-    INVENTORY {
-        uuid        id PK
-        uuid        warehouse_id FK
-        VARCHAR(50) name
         int         quantity
         timestamp   created_at
         timestamp   updated_at
@@ -190,8 +152,6 @@ erDiagram
 
     SHIPMENT ||--o{ CONTAINER : "has"
     SHIPMENT ||--o{ SHIPMENT_ITEM : "contains"
-    SHIPMENT_ITEM }o--|| INVENTORY : "references"
-    INVENTORY }o--|| WAREHOUSE : "stored in"
 ```
 
 ### Telemetry
@@ -243,10 +203,7 @@ erDiagram
 
 ## API Design Principles
 
-1. **REST externally**, gRPC internally — all client-facing endpoints are REST;
-   Shipment and Inventory communicate over gRPC because service-to-service
-   calls benefit from strongly typed contracts and lower latency than JSON over
-   HTTP.
+1. **REST externally**, gRPC internally — all client-facing endpoints are REST.
 
 2. **All external traffic enters through the gateway** — services are not
    directly accessible, the gateway is the only public entry point.

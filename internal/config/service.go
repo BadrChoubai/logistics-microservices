@@ -12,7 +12,7 @@ type ServiceConfig interface {
 	Validator
 }
 
-// Service is the configuration for API services: inventory, shipment, and telemetry.
+// Service is the configuration for API services: shipment and telemetry.
 // It embeds Base for all shared fields and adds a database connection.
 type Service struct {
 	Base

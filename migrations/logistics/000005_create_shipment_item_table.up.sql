@@ -2,10 +2,6 @@ CREATE TABLE shipment_item (
                            id uuid PRIMARY KEY,
                            shipment_id uuid NOT NULL,
                            CONSTRAINT fk_shipment_item_shipment FOREIGN KEY (shipment_id) REFERENCES shipment(id),
-                           inventory_id uuid NOT NULL,
-                           CONSTRAINT fk_shipment_item_inventory FOREIGN KEY (inventory_id) REFERENCES inventory(id),
-                            quantity int NOT NULL,
-
                            created_at timestamptz DEFAULT now(),
                            updated_at timestamptz DEFAULT now()
 );

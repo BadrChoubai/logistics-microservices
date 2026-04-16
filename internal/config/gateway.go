@@ -17,7 +17,6 @@ type Gateway struct {
 	Base
 
 	// Routes maps URL path prefixes to backend service base URLs.
-	// Example: { "/inventory/": "http://inventory:8081", "/shipment/": "http://shipment:8082" }
 	Routes map[string]string `json:"routes"`
 }
 
