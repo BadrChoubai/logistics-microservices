@@ -37,7 +37,7 @@ Compose.
 │       └── Dockerfile
 └── migrations
     ├── Makefile
-    ├── logistics
+    ├── shipment
     └── telemetry
 ```
 

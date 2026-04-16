@@ -1,4 +1,4 @@
-name: logistics
+name: shipment
 
 services:
   gateway:
@@ -19,7 +19,7 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      logistics-db:
+      shipment-db:
         condition: service_healthy
 
   telemetry:
@@ -34,16 +34,16 @@ services:
       telemetry-db:
         condition: service_healthy
 
-  logistics-db:
+  shipment-db:
     image: postgres:17-alpine
     environment:
-      POSTGRES_DB: logistics_db
+      POSTGRES_DB: shipment_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d logistics_db"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shipment_db"]
       interval: 5s
       timeout: 5s
       retries: 5
