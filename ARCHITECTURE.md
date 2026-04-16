@@ -30,7 +30,7 @@ that drive shipment risk state in real time.
 │   └── telemetry/          # Dockerfile + Kubernetes manifests
 ├── migrations/
 │   ├── Makefile            # Makefile for running migrations
-│   ├── logistics/          # shipment schema
+│   ├── shipment/           # shipment schema
 │   └── telemetry/          # sensor readings + risk assessments schema
 ├── ARCHITECTURE.md         # this document
 ├── LICENSE
@@ -122,7 +122,7 @@ The gateway is implemented in three stages, each independently deployable:
 ```mermaid
 flowchart TD
     A[Client] --> B{API Gateway}
-    B --> C[Shipment Service] --> D[(Logistics DB)]
+    B --> C[Shipment Service] --> D[(Shipment DB)]
     B --> G[Telemetry Service] --> H[(Telemetry DB)]
     H -->|NOTIFY risk_events| D
 ```
@@ -131,9 +131,9 @@ flowchart TD
 
 ## Data Model
 
-### Logistics DB
+### Shipment DB
 
-The logistics schema is intentionally lean. The shipment record serves as the
+The Shipment schema is intentionally lean. The shipment record serves as the
 domain anchor — cargo type drives threshold evaluation in the telemetry service,
 and current risk level is the materialized output of the latest risk assessment.
 

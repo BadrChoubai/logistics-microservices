@@ -83,7 +83,7 @@ go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@lat
 Environment variables are managed via `.env`
 
 ```bash
-LOGISTICS_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5432/logistics_db?sslmode=disable
+SHIPMENT_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5432/shipment_db?sslmode=disable
 TELEMETRY_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5434/telemetry_db?sslmode=disable
 ```
 
@@ -124,8 +124,8 @@ Or run in detached mode:
 Connection strings are defined in `.env` (see above). For local development with a GUI client:
 
 | Database     | URL                                             |
-| ------------ | ----------------------------------------------- |
-| logistics_db | `jdbc:postgresql://localhost:5432/logistics_db` |
+|--------------|-------------------------------------------------|
+| shipment_db  | `jdbc:postgresql://localhost:5432/shipment_db`  |
 | telemetry_db | `jdbc:postgresql://localhost:5434/telemetry_db` |
 
 **User:** `postgres` / **Password:** `postgres`
