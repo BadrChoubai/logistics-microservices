@@ -1,6 +1,13 @@
 # _Logistique_
 
-This repository contains a Go-based microservices architecture with an API Gateway as the central entry point. The project uses Docker and Docker Compose for local development and service orchestration.
+A supply chain risk intelligence platform built in Go, modeled after the class of
+problems solved by data-powered cargo insurers. Sensor readings from goods in transit
+are continuously evaluated against cargo-type thresholds, producing an immutable audit
+trail of risk assessments that drive shipment risk state in real time.
+
+The project demonstrates a production-style microservices architecture — two domain
+services behind an API gateway, each with its own database, orchestrated via Docker
+Compose.
 
 ---
 
@@ -13,21 +20,21 @@ This repository contains a Go-based microservices architecture with an API Gatew
 ├── Makefile
 ├── README.md
 ├── api
-│   └── swagger
+│   └── swagger
 ├── cmd
-│   ├── gateway
-│   ├── shipment
-│   └── telemetry
+│   ├── gateway
+│   ├── shipment
+│   └── telemetry
 ├── internal
-│   └── gateway
+│   └── gateway
 ├── manifests
-│   ├── docker-compose.yaml
-│   ├── gateway
-│   │   └── gateway
-│   ├── shipment
-│   │   └── Dockerfile
-│   └── telemetry
-│       └── Dockerfile
+│   ├── compose.yaml
+│   ├── gateway
+│   │   └── Dockerfile
+│   ├── shipment
+│   │   └── Dockerfile
+│   └── telemetry
+│       └── Dockerfile
 └── migrations
     ├── Makefile
     ├── logistics
@@ -87,13 +94,13 @@ TELEMETRY_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5434/telem
 ### 1. Build & Run with Docker Compose
 
 ```bash
-[docker|podman] compose -f manifests/docker-compose.yaml up --build
+[docker|podman] compose -f manifests/compose.yaml up --build
 ```
 
 Or run in detached mode:
 
 ```bash
-[docker|podman] compose -f manifests/docker-compose.yaml up -d --build
+[docker|podman] compose -f manifests/compose.yaml up -d --build
 ```
 
 ---
@@ -101,7 +108,7 @@ Or run in detached mode:
 ### 2. Stop Services
 
 ```bash
-[docker|podman] compose -f manifests/docker-compose.yaml down
+[docker|podman] compose -f manifests/compose.yaml down
 ```
 
 ---
@@ -109,7 +116,7 @@ Or run in detached mode:
 ### 3. View Logs
 
 ```bash
-[docker | podman] compose -f manifests/docker-compose.yaml logs -f gateway
+[docker|podman] compose -f manifests/compose.yaml logs -f gateway
 ```
 
 ## 🗄️ Database Access
@@ -169,7 +176,7 @@ b3d2787
 3. Run services:
 
    ```bash
-   docker compose -f manifests/docker-compose.yaml up --build
+   docker compose -f manifests/compose.yaml up --build
    ```
 
 _Other Commands_:
@@ -217,16 +224,22 @@ make version      # Print current version
 
 ## 🧠 Notes
 
-- The API Gateway acts as the **entry point and source of truth** for API documentation.
-- Services are containerized and orchestrated via Docker Compose.
-- Git commit hashes are used for deterministic versioning.
-- The project is structured as a **monorepo** containing multiple microservices.
+- The API Gateway is the single public entry point — services are not directly accessible.
+- Risk assessments are append-only; the audit trail is never modified, only extended.
+- Cross-service communication uses Postgres `LISTEN/NOTIFY` rather than synchronous RPC.
+- Git commit hashes are used for deterministic image versioning.
+- The project is structured as a monorepo containing all services and migrations.
 
 ---
 
 ## 📌 Future Improvements
 
-[//]: # "TODO: Create Project Board"
+- [ ] Risk evaluation engine — threshold configuration via API rather than hardcoded values
+- [ ] ADRs — document key design decisions (risk evaluation boundary, event log vs. mutable state)
+- [ ] Humidity threshold support in environmental risk evaluation
+- [ ] Gateway JWT validation (Stage 2)
+- [ ] Gateway load balancing (Stage 3)
+- [ ] Kubernetes manifests for production deployment
 
 ---
 
