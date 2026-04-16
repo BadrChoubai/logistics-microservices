@@ -1,6 +1,6 @@
 include .env
 
-BINS ?= gateway shipment inventory telemetry
+BINS ?= gateway shipment telemetry
 BUILD_DIRS := bin
 
 # Used internally.  Users should pass GOOS and/or GOARCH.

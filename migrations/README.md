@@ -20,7 +20,6 @@ these commands.
 
 ```bash
 export SHIPMENT_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5432/shipment_db?sslmode=disable
-export INVENTORY_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5433/inventory_db?sslmode=disable
 export TELEMETRY_DB_CONNECTION_STRING=postgres://postgres:postgres@localhost:5434/telemetry_db?sslmode=disable
 ```
 
@@ -41,11 +40,9 @@ used to install the correct database engine library with the tool.
 TARGETS:
   Makefile:db/start                      start database containers
   Makefile:migrations/up/shipment        run migrations for only shipment database
-  Makefile:migrations/up/inventory       run migrations for only inventory database
   Makefile:migrations/up/telemetry       run migrations for only telemetry database
   Makefile:migrations/up                 run migrations for all databases
   Makefile:migrations/down/shipment      run teardown migrations for shipment database
-  Makefile:migrations/down/inventory     run teardown migrations for inventory database
   Makefile:migrations/down/telemetry     run teardown migrations for telemetry database
   Makefile:migrations/down               run teardown migrations for all databases
   Makefile:targets                       print Makefile targets
