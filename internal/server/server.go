@@ -5,6 +5,7 @@ import (
 	"context"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/BadrChoubai/logistics-microservices/internal/middleware"
 	"github.com/BadrChoubai/logistics-microservices/internal/observability/logger"
@@ -27,8 +28,11 @@ func NewServer(port int, logger *logger.Logger) (*Server, error) {
 
 	srv := &Server{
 		HttpServer: &http.Server{
-			Addr:    ":" + strconv.Itoa(port),
-			Handler: handler,
+			Addr:         ":" + strconv.Itoa(port),
+			ReadTimeout:  5 * time.Second,
+			WriteTimeout: 5 * time.Second,
+			IdleTimeout:  120 * time.Second,
+			Handler:      handler,
 		},
 		Logger: logger,
 	}

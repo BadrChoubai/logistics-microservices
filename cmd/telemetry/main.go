@@ -19,7 +19,7 @@ import (
 // @title						Telemetry Service
 // @version					1.0.0
 // @description				Telemetry Service for the Logistics Services API platform
-// @host						localhost:8083
+// @host						localhost:8082
 // @BasePath					/
 // @securityDefinitions.apikey	BearerAuth
 // @in							header

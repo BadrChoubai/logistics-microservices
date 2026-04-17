@@ -1,4 +1,4 @@
-name: shipment
+name: logistics
 
 services:
   gateway:
